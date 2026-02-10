@@ -23,9 +23,9 @@
           "bridgeToken": { "type": "string" },
           "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000, "default": 45000 },
           "domain": { "type": "string" },
-          "accessToken": { "type": "string" }
-        },
-        "required": ["bridgeUrl"]
+          "accessToken": { "type": "string" },
+          "webhookPath": { "type": "string", "minLength": 1, "default": "/bitrix24/webhook" }
+        }
       },
       "channel": {
         "type": "object",
@@ -53,7 +53,7 @@
   "uiHints": {
     "plugins.entries.bitrix24.config.mode": {
       "label": "Connection mode",
-      "help": "direct = call bridge URL; channel = route through Hub/Edge."
+      "help": "direct = bridge path and/or plugin webhook path; channel = route through Hub/Edge."
     },
     "plugins.entries.bitrix24.config.direct.bridgeUrl": {
       "label": "Direct bridge URL",
@@ -73,6 +73,10 @@
     "plugins.entries.bitrix24.config.direct.accessToken": {
       "label": "Default Bitrix access token",
       "sensitive": true
+    },
+    "plugins.entries.bitrix24.config.direct.webhookPath": {
+      "label": "Plugin webhook path",
+      "placeholder": "/bitrix24/webhook"
     },
     "plugins.entries.bitrix24.config.channel.hubUrl": {
       "label": "Hub URL",

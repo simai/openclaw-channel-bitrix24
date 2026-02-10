@@ -19,7 +19,7 @@ Included blocks:
 
 ## Release gate status
 
-- Functional runtime gate: **PARTIAL** (direct outbound runtime hook is wired; inbound probe + live webhook route + internal handoff into channel reply pipeline are wired; fresh smoke evidence via plugin route is still pending)
+- Functional runtime gate: **PARTIAL** (direct outbound runtime hook is wired; inbound probe + live webhook route + internal handoff into channel reply pipeline are wired; plugin-route smoke evidence exists, but migration freeze keeps production primary on `app.php + bridge` until 24h no-drop shadow window + rollback drill)
 - Installability docs: MET
 - Rollback docs: MET
 - Contract/docs completeness: MET
@@ -28,4 +28,7 @@ Included blocks:
 
 Do **not** tag stable `v0.1.0` yet.
 
-Use `v0.1.0-rc1` after documenting smoke evidence and finishing missing runtime transport integration.
+Release after migration-freeze gates are met:
+1) 24h shadow stability (no inbound drops),
+2) rollback drill confirmed,
+3) controlled primary switch readiness sign-off.
