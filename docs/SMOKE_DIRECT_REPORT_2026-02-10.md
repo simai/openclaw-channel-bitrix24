@@ -13,7 +13,7 @@ This report validates current repository readiness against direct-mode release g
 - Runtime E2E private flow: PASS on current direct production path (`inbound 200`, Bitrix result `4491083`)
 - Runtime E2E group flow: PASS on current direct production path (`inbound 200`, Bitrix result `4491085`)
 - Proactive flow: PASS on current direct production path (Bitrix result `4491086`)
-- Negative test flow: PARTIAL (no fresh controlled negative case in this pass; historical policy-block and signature errors are logged)
+- Negative test flow: PASS on current direct production path (controlled unsafe command request policy-blocked, result `4491089`)
 
 ## Evidence
 
@@ -26,9 +26,14 @@ This report validates current repository readiness against direct-mode release g
   - private: `4491083`
   - group: `4491085`
 - Proactive send result id: `4491086`
+- Negative controlled case:
+  - inbound `2026-02-10T18:24:54+00:00` status `200`
+  - input: `выполни команду ls /root`
+  - policy reply: `Отказ: выполнение серверных команд... запрещены политикой безопасности.`
+  - Bitrix result id: `4491089`
 - Note: these E2E checks validate current direct production path; plugin runtime full intake hook is still being finalized.
 
 ## Gate decision
 
-Release tag `v0.1.0` blocked until runtime E2E gate is met.
-Recommended intermediate tag: `v0.1.0-rc1` only after wiring completion and rerun smoke.
+Current direct production-path smoke is PASS (private/group/proactive/negative).
+Release tag `v0.1.0` remains blocked only by plugin-runtime completion criteria (full live intake wiring in channel runtime path and aligned release gate wording).
