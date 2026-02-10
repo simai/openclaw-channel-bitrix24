@@ -10,7 +10,7 @@
 - [x] **B5** Token lifecycle hardening
 - [x] **B6** Compatibility mode + rollback switch
 - [x] **B7** Hub contract v1 freeze
-- [ ] **B8** Hub-side implementation (`openclaw-bridge`)
+- [x] **B8** Hub-side implementation (`openclaw-bridge`)
 - [ ] **B9** Edge Agent MVP (separate repo)
 - [ ] **B10** Plugin channel-mode transport
 - [ ] **B11** Deploy-kit turnkey profiles
