@@ -87,4 +87,5 @@ Hub routes request to active edge agent for the tenant.
 
 1. Replace scaffold channel with full plugin-sdk compliant implementation.
 2. Implement transport adapters for `direct` and `channel`.
-3. Add e2e smoke tests with Bitrix sandbox portal.
+3. Follow frozen Hub contract v1: `docs/HUB_CONTRACT_V1.md`.
+4. Add e2e smoke tests with Bitrix sandbox portal.
