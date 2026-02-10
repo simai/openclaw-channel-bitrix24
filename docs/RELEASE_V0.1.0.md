@@ -19,7 +19,7 @@ Included blocks:
 
 ## Release gate status
 
-- Functional runtime gate: **PARTIAL** (direct outbound runtime hook is wired; full live inbound transport binding and full E2E proof still pending)
+- Functional runtime gate: **PARTIAL** (direct outbound runtime hook is wired; inbound runtime probe/binding is wired at gateway lifecycle level; full live webhook intake + full E2E proof still pending)
 - Installability docs: MET
 - Rollback docs: MET
 - Contract/docs completeness: MET
