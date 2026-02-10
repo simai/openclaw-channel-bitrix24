@@ -1,4 +1,5 @@
 import type { ChannelPlugin } from "openclaw/plugin-sdk";
+import { resolveCompatibilityMode } from "./compat.js";
 
 export type Bitrix24ResolvedAccount = {
   accountId: string;
@@ -34,7 +35,20 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
   },
   config: {
     listAccountIds: () => ["default"],
-    resolveAccount: () => ({ accountId: "default", config: {} }),
+    resolveAccount: () => {
+      const compatibility = resolveCompatibilityMode({
+        mode: "direct",
+        enabled: true,
+        directConfigured: true,
+        channelConfigured: false,
+      });
+      return {
+        accountId: "default",
+        config: {
+          compatibility,
+        },
+      };
+    },
     defaultAccountId: () => "default",
     setAccountEnabled: ({ cfg }) => cfg,
     deleteAccount: ({ cfg }) => cfg,

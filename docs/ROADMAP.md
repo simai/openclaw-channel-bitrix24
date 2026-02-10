@@ -8,7 +8,7 @@
 - [x] **B3** Inbound adapter (direct)
 - [x] **B4** Outbound adapter (direct)
 - [x] **B5** Token lifecycle hardening
-- [ ] **B6** Compatibility mode + rollback switch
+- [x] **B6** Compatibility mode + rollback switch
 - [ ] **B7** Hub contract v1 freeze
 - [ ] **B8** Hub-side implementation (`openclaw-bridge`)
 - [ ] **B9** Edge Agent MVP (separate repo)
