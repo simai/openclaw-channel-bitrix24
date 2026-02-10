@@ -19,7 +19,7 @@ Included blocks:
 
 ## Release gate status
 
-- Functional runtime gate: **PARTIAL** (direct outbound runtime hook is wired; inbound runtime probe is wired; live webhook intake route is wired via plugin HTTP route; final internal handoff into full channel execution/reply pipeline is still pending)
+- Functional runtime gate: **PARTIAL** (direct outbound runtime hook is wired; inbound probe + live webhook route + internal handoff into channel reply pipeline are wired; fresh smoke evidence via plugin route is still pending)
 - Installability docs: MET
 - Rollback docs: MET
 - Contract/docs completeness: MET

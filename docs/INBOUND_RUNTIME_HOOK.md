@@ -22,5 +22,5 @@ This binds inbound normalization into channel runtime lifecycle (gateway start/s
 
 ## Current limitation
 
-Live webhook intake is now wired at plugin runtime route level.
-Remaining completion item: final handoff from accepted inbound payload into full internal channel execution/reply pipeline without relying on external bridge path.
+Live webhook intake and internal handoff into channel reply pipeline are wired.
+Remaining completion item: fresh smoke evidence through plugin route (`/bitrix24/webhook` or configured `direct.webhookPath`) to move release gate wording from PARTIAL to MET.

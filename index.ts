@@ -20,7 +20,10 @@ const plugin = {
     api.registerHttpRoute({
       path: inboundPath,
       handler: async (req, res) => {
-        await handleBitrixInboundHttp(req, res);
+        await handleBitrixInboundHttp(req, res, {
+          runtime: api.runtime,
+          cfg: api.config as any,
+        });
       },
     });
 

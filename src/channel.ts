@@ -159,6 +159,9 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
           liveHits: live.hits,
           liveLastInboundAt: live.lastInboundAt,
           liveLastError: live.lastError,
+          handoffCount: live.handoffCount,
+          lastHandoffAt: live.lastHandoffAt,
+          lastHandoffError: live.lastHandoffError,
         },
       });
 
@@ -178,6 +181,9 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
               liveHits: live.hits,
               liveLastInboundAt: live.lastInboundAt,
               liveLastError: live.lastError,
+              handoffCount: live.handoffCount,
+              lastHandoffAt: live.lastHandoffAt,
+              lastHandoffError: live.lastHandoffError,
             },
           });
         },

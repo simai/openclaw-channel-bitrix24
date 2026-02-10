@@ -1,6 +1,17 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { createReplyPrefixOptions } from "openclaw/plugin-sdk";
+import type { OpenClawConfig, PluginRuntime } from "openclaw/plugin-sdk";
+import { getBitrix24PluginConfig } from "./config.js";
 import { executeInboundRuntime } from "./inbound-runtime.js";
-import { recordInboundLiveError, recordInboundLiveHit } from "./runtime.js";
+import { sendBitrixImbotMessage } from "./outbound.js";
+import {
+  recordInboundHandoffError,
+  recordInboundHandoffSuccess,
+  recordInboundLiveError,
+  recordInboundLiveHit,
+} from "./runtime.js";
+
+const CHANNEL_ID = "bitrix24";
 
 function writeJson(res: ServerResponse, statusCode: number, payload: unknown) {
   res.statusCode = statusCode;
@@ -18,7 +29,11 @@ async function readJsonBody(req: IncomingMessage): Promise<any> {
   return JSON.parse(raw);
 }
 
-export async function handleBitrixInboundHttp(req: IncomingMessage, res: ServerResponse): Promise<void> {
+export async function handleBitrixInboundHttp(
+  req: IncomingMessage,
+  res: ServerResponse,
+  deps: { runtime: PluginRuntime; cfg: OpenClawConfig },
+): Promise<void> {
   if ((req.method || "GET").toUpperCase() !== "POST") {
     writeJson(res, 405, { ok: false, error: "method not allowed" });
     return;
@@ -28,7 +43,7 @@ export async function handleBitrixInboundHttp(req: IncomingMessage, res: ServerR
     const payload = await readJsonBody(req);
     const runtime = executeInboundRuntime({ payload });
 
-    if (!runtime.ok) {
+    if (!runtime.ok || !runtime.normalized) {
       recordInboundLiveError(runtime.error || "inbound normalize failed");
       writeJson(res, 400, {
         ok: false,
@@ -40,18 +55,123 @@ export async function handleBitrixInboundHttp(req: IncomingMessage, res: ServerR
 
     recordInboundLiveHit();
 
-    // Step D9.2+: live webhook intake is now wired at plugin runtime route.
-    // Full handoff into an internal channel event bus remains part of final runtime completion.
+    const pluginCfg = getBitrix24PluginConfig(deps.cfg as any);
+    const accessToken = String(pluginCfg.direct?.accessToken || "").trim();
+    if (!accessToken) {
+      const err = "bitrix24 direct.accessToken is required for live inbound handoff";
+      recordInboundHandoffError(err);
+      writeJson(res, 500, { ok: false, error: err });
+      return;
+    }
+
+    const isGroup = (runtime.normalized.chatType || "P").toUpperCase() !== "P";
+    const route = deps.runtime.channel.routing.resolveAgentRoute({
+      cfg: deps.cfg,
+      channel: CHANNEL_ID,
+      accountId: "default",
+      peer: {
+        kind: isGroup ? "group" : "dm",
+        id: isGroup ? runtime.normalized.dialogId : runtime.normalized.authorId,
+      },
+    });
+
+    const storePath = deps.runtime.channel.session.resolveStorePath(deps.cfg.session?.store, {
+      agentId: route.agentId,
+    });
+    const envelopeOptions = deps.runtime.channel.reply.resolveEnvelopeFormatOptions(deps.cfg);
+    const previousTimestamp = deps.runtime.channel.session.readSessionUpdatedAt({
+      storePath,
+      sessionKey: route.sessionKey,
+    });
+
+    const timestamp = Date.now();
+    const fromLabel = isGroup
+      ? `chat:${runtime.normalized.dialogId}`
+      : `user:${runtime.normalized.authorId}`;
+
+    const body = deps.runtime.channel.reply.formatAgentEnvelope({
+      channel: "Bitrix24",
+      from: fromLabel,
+      timestamp,
+      previousTimestamp,
+      envelope: envelopeOptions,
+      body: runtime.normalized.text,
+    });
+
+    const ctxPayload = deps.runtime.channel.reply.finalizeInboundContext({
+      Body: body,
+      RawBody: runtime.normalized.text,
+      CommandBody: runtime.normalized.text,
+      From: `bitrix24:${runtime.normalized.authorId}`,
+      To: `bitrix24:${runtime.normalized.domain}:${runtime.normalized.dialogId}`,
+      SessionKey: route.sessionKey,
+      AccountId: route.accountId,
+      ChatType: isGroup ? "group" : "direct",
+      ConversationLabel: fromLabel,
+      SenderId: runtime.normalized.authorId,
+      MessageSid: runtime.normalized.messageId,
+      Timestamp: timestamp,
+      Provider: CHANNEL_ID,
+      Surface: CHANNEL_ID,
+      OriginatingChannel: CHANNEL_ID,
+      OriginatingTo: `bitrix24:${runtime.normalized.domain}:${runtime.normalized.dialogId}`,
+      CommandAuthorized: true,
+    });
+
+    await deps.runtime.channel.session.recordInboundSession({
+      storePath,
+      sessionKey: ctxPayload.SessionKey ?? route.sessionKey,
+      ctx: ctxPayload,
+      onRecordError: () => {
+        // keep live path best-effort; do not fail webhook on metadata write issues
+      },
+    });
+
+    const { onModelSelected, ...prefixOptions } = createReplyPrefixOptions({
+      cfg: deps.cfg,
+      agentId: route.agentId,
+      channel: CHANNEL_ID,
+      accountId: route.accountId,
+    });
+
+    await deps.runtime.channel.reply.dispatchReplyWithBufferedBlockDispatcher({
+      ctx: ctxPayload,
+      cfg: deps.cfg,
+      dispatcherOptions: {
+        ...prefixOptions,
+        deliver: async (replyPayload) => {
+          const text = String((replyPayload as any)?.text || "").trim();
+          if (!text) return;
+          await sendBitrixImbotMessage({
+            domain: runtime.normalized!.domain,
+            accessToken,
+            dialogId: runtime.normalized!.dialogId,
+            message: text,
+            timeoutMs: pluginCfg.direct?.timeoutMs,
+          });
+        },
+        onError: (err) => {
+          recordInboundHandoffError(String(err));
+        },
+      },
+      replyOptions: {
+        onModelSelected,
+      },
+    });
+
+    recordInboundHandoffSuccess();
+
     writeJson(res, 202, {
       ok: true,
-      phase: runtime.phase,
       accepted: true,
-      sessionKey: runtime.normalized?.sessionKey,
-      chatType: runtime.normalized?.chatType,
+      handedOff: true,
+      sessionKey: route.sessionKey,
+      chatType: runtime.normalized.chatType,
     });
   } catch (e: any) {
     const err = String(e?.message || e);
     recordInboundLiveError(err);
+    recordInboundHandoffError(err);
     writeJson(res, 400, { ok: false, error: err });
   }
 }

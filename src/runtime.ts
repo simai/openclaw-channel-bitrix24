@@ -7,6 +7,9 @@ type InboundLiveState = {
   hits: number;
   lastInboundAt: number | null;
   lastError: string | null;
+  handoffCount: number;
+  lastHandoffAt: number | null;
+  lastHandoffError: string | null;
 };
 
 const inboundLiveState: InboundLiveState = {
@@ -14,6 +17,9 @@ const inboundLiveState: InboundLiveState = {
   hits: 0,
   lastInboundAt: null,
   lastError: null,
+  handoffCount: 0,
+  lastHandoffAt: null,
+  lastHandoffError: null,
 };
 
 export function setBitrix24Runtime(next: PluginRuntime) {
@@ -39,6 +45,16 @@ export function recordInboundLiveHit() {
 
 export function recordInboundLiveError(error: string) {
   inboundLiveState.lastError = error;
+}
+
+export function recordInboundHandoffSuccess() {
+  inboundLiveState.handoffCount += 1;
+  inboundLiveState.lastHandoffAt = Date.now();
+  inboundLiveState.lastHandoffError = null;
+}
+
+export function recordInboundHandoffError(error: string) {
+  inboundLiveState.lastHandoffError = error;
 }
 
 export function getInboundLiveState(): InboundLiveState {
