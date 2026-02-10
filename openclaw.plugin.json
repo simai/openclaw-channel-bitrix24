@@ -1,5 +1,5 @@
 {
-  "id": "bitrix24",
+  "id": "openclaw-channel-bitrix24",
   "name": "Bitrix24 Channel",
   "description": "Bitrix24 channel plugin for OpenClaw",
   "version": "0.1.0",
@@ -7,7 +7,7 @@
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["mode"],
+    "required": [],
     "properties": {
       "mode": {
         "type": "string",
@@ -39,57 +39,48 @@
         "required": ["hubUrl", "tenantChannelId"]
       }
     },
-    "allOf": [
-      {
-        "if": { "properties": { "mode": { "const": "direct" } } },
-        "then": { "required": ["direct"] }
-      },
-      {
-        "if": { "properties": { "mode": { "const": "channel" } } },
-        "then": { "required": ["channel"] }
-      }
-    ]
+    "allOf": []
   },
   "uiHints": {
-    "plugins.entries.bitrix24.config.mode": {
+    "plugins.entries.openclaw-channel-bitrix24.config.mode": {
       "label": "Connection mode",
       "help": "direct = bridge path and/or plugin webhook path; channel = route through Hub/Edge."
     },
-    "plugins.entries.bitrix24.config.direct.bridgeUrl": {
+    "plugins.entries.openclaw-channel-bitrix24.config.direct.bridgeUrl": {
       "label": "Direct bridge URL",
       "placeholder": "https://bridge.example.com/v1/inbound"
     },
-    "plugins.entries.bitrix24.config.direct.bridgeToken": {
+    "plugins.entries.openclaw-channel-bitrix24.config.direct.bridgeToken": {
       "label": "Direct bridge token",
       "sensitive": true
     },
-    "plugins.entries.bitrix24.config.direct.timeoutMs": {
+    "plugins.entries.openclaw-channel-bitrix24.config.direct.timeoutMs": {
       "label": "Direct timeout (ms)"
     },
-    "plugins.entries.bitrix24.config.direct.domain": {
+    "plugins.entries.openclaw-channel-bitrix24.config.direct.domain": {
       "label": "Default Bitrix domain",
       "placeholder": "portal.simai.ru"
     },
-    "plugins.entries.bitrix24.config.direct.accessToken": {
+    "plugins.entries.openclaw-channel-bitrix24.config.direct.accessToken": {
       "label": "Default Bitrix access token",
       "sensitive": true
     },
-    "plugins.entries.bitrix24.config.direct.webhookPath": {
+    "plugins.entries.openclaw-channel-bitrix24.config.direct.webhookPath": {
       "label": "Plugin webhook path",
       "placeholder": "/bitrix24/webhook"
     },
-    "plugins.entries.bitrix24.config.channel.hubUrl": {
+    "plugins.entries.openclaw-channel-bitrix24.config.channel.hubUrl": {
       "label": "Hub URL",
       "placeholder": "https://hub.example.com/v1/channel/inbound"
     },
-    "plugins.entries.bitrix24.config.channel.channelToken": {
+    "plugins.entries.openclaw-channel-bitrix24.config.channel.channelToken": {
       "label": "Channel token",
       "sensitive": true
     },
-    "plugins.entries.bitrix24.config.channel.tenantChannelId": {
+    "plugins.entries.openclaw-channel-bitrix24.config.channel.tenantChannelId": {
       "label": "Tenant channel id"
     },
-    "plugins.entries.bitrix24.config.channel.timeoutMs": {
+    "plugins.entries.openclaw-channel-bitrix24.config.channel.timeoutMs": {
       "label": "Channel timeout (ms)"
     }
   }

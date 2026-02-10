@@ -6,7 +6,7 @@ import { handleBitrixInboundHttp } from "./src/http-inbound.js";
 import { setBitrix24Runtime, setInboundRoutePath } from "./src/runtime.js";
 
 const plugin = {
-  id: "bitrix24",
+  id: "openclaw-channel-bitrix24",
   name: "Bitrix24",
   description: "Bitrix24 channel plugin",
   configSchema: emptyPluginConfigSchema(),
