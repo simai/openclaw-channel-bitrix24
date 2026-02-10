@@ -1,0 +1,29 @@
+{
+  "name": "@simai/openclaw-channel-bitrix24",
+  "version": "0.1.0",
+  "description": "OpenClaw Bitrix24 channel plugin (scaffold)",
+  "type": "module",
+  "private": false,
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "channel": {
+      "id": "bitrix24",
+      "label": "Bitrix24",
+      "selectionLabel": "Bitrix24 (app + bridge)",
+      "docsPath": "/channels/bitrix24",
+      "docsLabel": "bitrix24",
+      "blurb": "Bitrix24 bot channel with direct and hub/edge connectivity modes.",
+      "order": 66,
+      "aliases": ["bitrix", "b24"]
+    },
+    "install": {
+      "npmSpec": "@simai/openclaw-channel-bitrix24",
+      "defaultChoice": "npm"
+    }
+  },
+  "devDependencies": {
+    "openclaw": "workspace:*"
+  }
+}
