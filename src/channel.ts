@@ -17,6 +17,8 @@ const bitrix24Meta = {
 } as const;
 
 export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
+  // B3 note: inbound normalization logic lives in src/inbound.ts and will be
+  // wired into runtime transport in subsequent blocks.
   id: "bitrix24",
   meta: bitrix24Meta,
   capabilities: {
