@@ -3,6 +3,7 @@ import { resolveCompatibilityMode } from "./compat.js";
 import { getBitrix24PluginConfig, parseOutboundTarget } from "./config.js";
 import { executeInboundRuntime } from "./inbound-runtime.js";
 import { sendBitrixImbotMessage } from "./outbound.js";
+import { getInboundLiveState } from "./runtime.js";
 
 export type Bitrix24ResolvedAccount = {
   accountId: string;
@@ -142,6 +143,7 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
       });
 
       const current = ctx.getStatus();
+      const live = getInboundLiveState();
       ctx.setStatus({
         ...current,
         accountId: ctx.accountId,
@@ -153,6 +155,10 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
           inboundBinding: probe.ok,
           phase: probe.phase,
           error: probe.error || null,
+          routePath: live.routePath,
+          liveHits: live.hits,
+          liveLastInboundAt: live.lastInboundAt,
+          liveLastError: live.lastError,
         },
       });
 
@@ -160,11 +166,19 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
         stop: async () => {
           const now = Date.now();
           const currentStop = ctx.getStatus();
+          const live = getInboundLiveState();
           ctx.setStatus({
             ...currentStop,
             accountId: ctx.accountId,
             running: false,
             lastStopAt: now,
+            probe: {
+              ...(currentStop as any)?.probe,
+              routePath: live.routePath,
+              liveHits: live.hits,
+              liveLastInboundAt: live.lastInboundAt,
+              liveLastError: live.lastError,
+            },
           });
         },
       };

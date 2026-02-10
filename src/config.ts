@@ -6,6 +6,7 @@ export type Bitrix24PluginConfig = {
     timeoutMs?: number;
     domain?: string;
     accessToken?: string;
+    webhookPath?: string;
   };
   channel?: {
     hubUrl?: string;
@@ -37,6 +38,7 @@ export function getBitrix24PluginConfig(cfg: any): Bitrix24PluginConfig {
       timeoutMs: Number(direct.timeoutMs || 45000),
       domain: typeof direct.domain === "string" ? direct.domain : undefined,
       accessToken: typeof direct.accessToken === "string" ? direct.accessToken : undefined,
+      webhookPath: typeof direct.webhookPath === "string" ? direct.webhookPath : undefined,
     },
     channel: {
       hubUrl: typeof channel.hubUrl === "string" ? channel.hubUrl : undefined,
