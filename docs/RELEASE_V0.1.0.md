@@ -19,7 +19,7 @@ Included blocks:
 
 ## Release gate status
 
-- Functional runtime gate: **PENDING/NOT MET** (channel runtime transport hooks are not fully wired to live OpenClaw channel execution path yet)
+- Functional runtime gate: **PARTIAL** (direct outbound runtime hook is wired; full live inbound transport binding and full E2E proof still pending)
 - Installability docs: MET
 - Rollback docs: MET
 - Contract/docs completeness: MET

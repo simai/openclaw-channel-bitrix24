@@ -1,5 +1,7 @@
 import type { ChannelPlugin } from "openclaw/plugin-sdk";
 import { resolveCompatibilityMode } from "./compat.js";
+import { getBitrix24PluginConfig, parseOutboundTarget } from "./config.js";
+import { sendBitrixImbotMessage } from "./outbound.js";
 
 export type Bitrix24ResolvedAccount = {
   accountId: string;
@@ -35,28 +37,33 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
   },
   config: {
     listAccountIds: () => ["default"],
-    resolveAccount: () => {
+    resolveAccount: (cfg) => {
+      const pluginCfg = getBitrix24PluginConfig(cfg);
       const compatibility = resolveCompatibilityMode({
-        mode: "direct",
+        mode: pluginCfg.mode,
         enabled: true,
-        directConfigured: true,
-        channelConfigured: false,
+        directConfigured: Boolean(pluginCfg.direct?.bridgeUrl),
+        channelConfigured: Boolean(pluginCfg.channel?.hubUrl && pluginCfg.channel?.tenantChannelId),
       });
       return {
         accountId: "default",
         config: {
           compatibility,
+          plugin: pluginCfg,
         },
       };
     },
     defaultAccountId: () => "default",
     setAccountEnabled: ({ cfg }) => cfg,
     deleteAccount: ({ cfg }) => cfg,
-    isConfigured: () => true,
-    describeAccount: () => ({
+    isConfigured: (account) => Boolean((account as any)?.config?.compatibility?.rollbackActive === false),
+    describeAccount: (account) => ({
       accountId: "default",
       enabled: true,
-      configured: true,
+      configured: Boolean((account as any)?.config?.compatibility?.rollbackActive === false),
+      mode: ((account as any)?.config?.plugin?.mode as string) || "direct",
+      rollbackActive: Boolean((account as any)?.config?.compatibility?.rollbackActive),
+      rollbackReason: String((account as any)?.config?.compatibility?.reason || ""),
     }),
     resolveAllowFrom: () => [],
     formatAllowFrom: ({ allowFrom }) => allowFrom,
@@ -82,7 +89,33 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
     normalizeTarget: ({ target }) => ({ kind: "peer", value: String(target ?? "") }),
     targetResolver: {
       looksLikeId: () => true,
-      hint: "<bitrix user/dialog id>",
+      hint: "<domain:dialogId | bitrix:domain:dialogId | dialogId(with direct.domain)>",
+    },
+  },
+  outbound: {
+    deliveryMode: "direct",
+    textChunkLimit: 4000,
+    sendText: async ({ cfg, to, text }) => {
+      const pluginCfg = getBitrix24PluginConfig(cfg);
+      const domainFallback = pluginCfg.direct?.domain;
+      const accessToken = String(pluginCfg.direct?.accessToken || "").trim();
+      if (!accessToken) {
+        throw new Error("bitrix24 direct.accessToken is required for outbound send");
+      }
+
+      const target = parseOutboundTarget(String(to || ""), domainFallback);
+      const out = await sendBitrixImbotMessage({
+        domain: target.domain,
+        accessToken,
+        dialogId: target.dialogId,
+        message: text,
+        timeoutMs: pluginCfg.direct?.timeoutMs,
+      });
+
+      return {
+        channel: "bitrix24",
+        result: out.result,
+      };
     },
   },
   resolver: {

@@ -21,7 +21,9 @@
         "properties": {
           "bridgeUrl": { "type": "string", "minLength": 1 },
           "bridgeToken": { "type": "string" },
-          "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000, "default": 45000 }
+          "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000, "default": 45000 },
+          "domain": { "type": "string" },
+          "accessToken": { "type": "string" }
         },
         "required": ["bridgeUrl"]
       },
@@ -63,6 +65,14 @@
     },
     "plugins.entries.bitrix24.config.direct.timeoutMs": {
       "label": "Direct timeout (ms)"
+    },
+    "plugins.entries.bitrix24.config.direct.domain": {
+      "label": "Default Bitrix domain",
+      "placeholder": "portal.simai.ru"
+    },
+    "plugins.entries.bitrix24.config.direct.accessToken": {
+      "label": "Default Bitrix access token",
+      "sensitive": true
     },
     "plugins.entries.bitrix24.config.channel.hubUrl": {
       "label": "Hub URL",
