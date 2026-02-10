@@ -7,11 +7,13 @@
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
+    "required": ["mode"],
     "properties": {
       "mode": {
         "type": "string",
         "enum": ["direct", "channel"],
-        "default": "direct"
+        "default": "direct",
+        "description": "Transport mode: direct bridge call or hub/edge channel mode."
       },
       "direct": {
         "type": "object",
@@ -20,7 +22,8 @@
           "bridgeUrl": { "type": "string", "minLength": 1 },
           "bridgeToken": { "type": "string" },
           "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000, "default": 45000 }
-        }
+        },
+        "required": ["bridgeUrl"]
       },
       "channel": {
         "type": "object",
@@ -28,21 +31,52 @@
         "properties": {
           "hubUrl": { "type": "string", "minLength": 1 },
           "channelToken": { "type": "string" },
-          "tenantChannelId": { "type": "string" },
+          "tenantChannelId": { "type": "string", "minLength": 1 },
           "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000, "default": 45000 }
-        }
+        },
+        "required": ["hubUrl", "tenantChannelId"]
       }
-    }
+    },
+    "allOf": [
+      {
+        "if": { "properties": { "mode": { "const": "direct" } } },
+        "then": { "required": ["direct"] }
+      },
+      {
+        "if": { "properties": { "mode": { "const": "channel" } } },
+        "then": { "required": ["channel"] }
+      }
+    ]
   },
   "uiHints": {
     "plugins.entries.bitrix24.config.mode": {
-      "label": "Connection mode"
+      "label": "Connection mode",
+      "help": "direct = call bridge URL; channel = route through Hub/Edge."
     },
     "plugins.entries.bitrix24.config.direct.bridgeUrl": {
-      "label": "Direct bridge URL"
+      "label": "Direct bridge URL",
+      "placeholder": "https://bridge.example.com/v1/inbound"
+    },
+    "plugins.entries.bitrix24.config.direct.bridgeToken": {
+      "label": "Direct bridge token",
+      "sensitive": true
+    },
+    "plugins.entries.bitrix24.config.direct.timeoutMs": {
+      "label": "Direct timeout (ms)"
     },
     "plugins.entries.bitrix24.config.channel.hubUrl": {
-      "label": "Hub URL"
+      "label": "Hub URL",
+      "placeholder": "https://hub.example.com/v1/channel/inbound"
+    },
+    "plugins.entries.bitrix24.config.channel.channelToken": {
+      "label": "Channel token",
+      "sensitive": true
+    },
+    "plugins.entries.bitrix24.config.channel.tenantChannelId": {
+      "label": "Tenant channel id"
+    },
+    "plugins.entries.bitrix24.config.channel.timeoutMs": {
+      "label": "Channel timeout (ms)"
     }
   }
 }

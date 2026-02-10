@@ -4,7 +4,7 @@
 
 - [x] **B0** Freeze baseline + acceptance/rollback gates
 - [x] **B1** Plugin SDK-compliant skeleton
-- [ ] **B2** Config schema v1 + UI hints
+- [x] **B2** Config schema v1 + UI hints
 - [ ] **B3** Inbound adapter (direct)
 - [ ] **B4** Outbound adapter (direct)
 - [ ] **B5** Token lifecycle hardening
