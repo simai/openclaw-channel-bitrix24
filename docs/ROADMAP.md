@@ -6,7 +6,7 @@
 - [x] **B1** Plugin SDK-compliant skeleton
 - [x] **B2** Config schema v1 + UI hints
 - [x] **B3** Inbound adapter (direct)
-- [ ] **B4** Outbound adapter (direct)
+- [x] **B4** Outbound adapter (direct)
 - [ ] **B5** Token lifecycle hardening
 - [ ] **B6** Compatibility mode + rollback switch
 - [ ] **B7** Hub contract v1 freeze
