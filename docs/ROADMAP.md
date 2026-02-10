@@ -16,7 +16,7 @@ Hub/Edge work is intentionally deferred to avoid unnecessary complexity until di
 - [x] **D5** Token lifecycle hardening
 - [x] **D6** Compatibility mode + rollback switch
 - [x] **D7** Runtime wiring of inbound/outbound/token flow into channel execution path
-- [ ] **D8** E2E direct smoke pack + install docs for any OpenClaw server
+- [x] **D8** E2E direct smoke pack + install docs for any OpenClaw server
 - [ ] **D9** Canary tenant + `v0.1.0` stable tag
 
 ## Deferred (not in current scope)

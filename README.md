@@ -37,10 +37,11 @@ openclaw plugins enable bitrix24
 
 Then configure `plugins.entries.bitrix24.config` according to schema in `openclaw.plugin.json`.
 
-## Next implementation steps
+## Next implementation steps (direct-only scope)
 
-1. Implement `register(api)` with `api.registerChannel(...)`.
-2. Implement inbound adapter + normalized message mapping.
-3. Implement outbound adapter using Bitrix REST (`imbot.message.add`).
-4. Add Hub/Edge mode contracts and transport adapter.
-5. Add smoke tests and sample config.
+1. Complete direct runtime integration into channel execution path.
+2. Run `docs/SMOKE_DIRECT.md` checklist and capture evidence.
+3. Finalize installability docs (`docs/INSTALL.md`) for any OpenClaw server.
+4. Canary rollout and `v0.1.0` tagging.
+
+> Hub/Edge channel mode is deferred until after direct-mode stabilization.
