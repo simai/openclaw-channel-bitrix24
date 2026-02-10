@@ -2,7 +2,7 @@
 
 Bitrix24 channel plugin scaffold for OpenClaw.
 
-> Status: **scaffold / MVP-in-progress**
+> Status: **MVP-in-progress (current scope: direct mode only)**
 
 ## Goal
 

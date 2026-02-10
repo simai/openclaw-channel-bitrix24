@@ -1,26 +1,31 @@
-# ROADMAP — Bitrix24 Channel (B0..B12)
+# ROADMAP — Bitrix24 Channel
 
-## Block model (one-step execution)
+## Current execution scope (approved)
 
-- [x] **B0** Freeze baseline + acceptance/rollback gates
-- [x] **B1** Plugin SDK-compliant skeleton
-- [x] **B2** Config schema v1 + UI hints
-- [x] **B3** Inbound adapter (direct)
-- [x] **B4** Outbound adapter (direct)
-- [x] **B5** Token lifecycle hardening
-- [x] **B6** Compatibility mode + rollback switch
-- [x] **B7** Hub contract v1 freeze
-- [x] **B8** Hub-side implementation (`openclaw-bridge`)
-- [x] **B9** Edge Agent MVP (separate repo)
-- [ ] **B10** Plugin channel-mode transport
-- [ ] **B11** Deploy-kit turnkey profiles
-- [ ] **B12** Canary rollout + stable release tags
+**Direct-only track** for ближайший релиз (`v0.1.0`).
 
-## Release milestones
+Hub/Edge work is intentionally deferred to avoid unnecessary complexity until direct mode is production-stable.
 
-- `v0.1.0` → Direct mode stable
-- `v0.2.0` → Channel mode stable
+## Direct track (one-step execution)
+
+- [x] **D0** Freeze baseline + acceptance/rollback gates
+- [x] **D1** Plugin SDK-compliant skeleton
+- [x] **D2** Config schema v1 + UI hints
+- [x] **D3** Inbound adapter (direct)
+- [x] **D4** Outbound adapter (direct)
+- [x] **D5** Token lifecycle hardening
+- [x] **D6** Compatibility mode + rollback switch
+- [ ] **D7** Runtime wiring of inbound/outbound/token flow into channel execution path
+- [ ] **D8** E2E direct smoke pack + install docs for any OpenClaw server
+- [ ] **D9** Canary tenant + `v0.1.0` stable tag
+
+## Deferred (not in current scope)
+
+- [ ] **C1** Hub contract / transport refinement
+- [ ] **C2** Hub implementation (`openclaw-bridge`) rollout
+- [ ] **C3** Edge agent rollout
+- [ ] **C4** Channel mode release (`v0.2.0`)
 
 ## Migration rule
 
-No big-bang switch. Keep current `app.php + bridge` path intact and use canary + mode-switch rollback.
+No big-bang switch. Keep current `app.php + bridge` path intact and use rollback-first operations.
