@@ -24,7 +24,9 @@ export function getBitrix24PluginConfig(cfg: any): Bitrix24PluginConfig {
   const plugins = asObj(cfg?.plugins);
   const entries = asObj(plugins.entries);
   const bitrixEntry = asObj(entries.bitrix24);
-  const pluginConfig = asObj(bitrixEntry.config);
+  const pluginIdEntry = asObj(entries["openclaw-channel-bitrix24"]);
+  const entry = Object.keys(bitrixEntry).length > 0 ? bitrixEntry : pluginIdEntry;
+  const pluginConfig = asObj(entry.config);
 
   const mode = String(pluginConfig.mode ?? "direct").toLowerCase() === "channel" ? "channel" : "direct";
   const direct = asObj(pluginConfig.direct);

@@ -77,5 +77,8 @@ You can keep both configured during migration.
 ## Notes
 
 - `bridgeToken`, `channelToken`, `accessToken` are secrets.
+- Live plugin webhook route auth:
+  - if `direct.bridgeToken` is set, inbound `POST /bitrix24/webhook` must include token via `X-Channel-Token` header (or `Authorization: Bearer <token>`).
+  - fallback: if `direct.bridgeToken` empty and `channel.channelToken` set, it will be used for inbound auth.
 - Keep initial timeout conservative (`45000`) and tune by diagnostics.
 - Current migration policy: production primary remains `app.php + bridge`; plugin webhook route runs shadow/canary until stability gate is met.

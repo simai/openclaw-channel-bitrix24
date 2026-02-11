@@ -29,6 +29,18 @@ async function readJsonBody(req: IncomingMessage): Promise<any> {
   return JSON.parse(raw);
 }
 
+function extractInboundToken(req: IncomingMessage): string {
+  const h = req.headers || {};
+  const fromHeader = String(h["x-channel-token"] || h["x-bitrix24-token"] || "").trim();
+  if (fromHeader) return fromHeader;
+
+  const auth = String(h.authorization || "").trim();
+  if (auth.toLowerCase().startsWith("bearer ")) {
+    return auth.slice(7).trim();
+  }
+  return "";
+}
+
 export async function handleBitrixInboundHttp(
   req: IncomingMessage,
   res: ServerResponse,
@@ -40,6 +52,21 @@ export async function handleBitrixInboundHttp(
   }
 
   try {
+    const pluginCfg = getBitrix24PluginConfig(deps.cfg as any);
+
+    // Inbound auth token for webhook route:
+    // prefer direct.bridgeToken (current direct-mode secret), fallback to channel.channelToken.
+    const expectedInboundToken = String(
+      pluginCfg.direct?.bridgeToken || pluginCfg.channel?.channelToken || "",
+    ).trim();
+    if (expectedInboundToken) {
+      const incomingToken = extractInboundToken(req);
+      if (!incomingToken || incomingToken !== expectedInboundToken) {
+        writeJson(res, 401, { ok: false, error: "unauthorized: invalid channel token" });
+        return;
+      }
+    }
+
     const payload = await readJsonBody(req);
     const runtime = executeInboundRuntime({ payload });
 
@@ -55,7 +82,6 @@ export async function handleBitrixInboundHttp(
 
     recordInboundLiveHit();
 
-    const pluginCfg = getBitrix24PluginConfig(deps.cfg as any);
     const accessToken = String(pluginCfg.direct?.accessToken || "").trim();
     if (!accessToken) {
       const err = "bitrix24 direct.accessToken is required for live inbound handoff";
