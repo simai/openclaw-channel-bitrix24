@@ -47,12 +47,6 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
             bitrix24: {
               type: "object",
               properties: {
-                mode: {
-                  type: "string",
-                  enum: ["direct"],
-                  title: "Mode",
-                  description: "Direct mode only"
-                },
                 direct: {
                   type: "object",
                   title: "Direct",
