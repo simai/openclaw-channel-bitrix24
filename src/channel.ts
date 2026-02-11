@@ -51,21 +51,14 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
                 direct: {
                   type: "object",
                   properties: {
-                    bridgeUrl: { type: "string" },
                     bridgeToken: { type: "string" },
-                    timeoutMs: { type: "number" },
-                    domain: { type: "string" },
-                    accessToken: { type: "string" },
                     webhookPath: { type: "string" }
                   }
                 },
                 channel: {
                   type: "object",
                   properties: {
-                    hubUrl: { type: "string" },
-                    channelToken: { type: "string" },
-                    tenantChannelId: { type: "string" },
-                    timeoutMs: { type: "number" }
+                    channelToken: { type: "string" }
                   }
                 }
               }
