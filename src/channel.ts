@@ -40,20 +40,16 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
   configSchema: {
     schema: {
       type: "object",
-      additionalProperties: true,
       properties: {
         channels: {
           type: "object",
-          additionalProperties: true,
           properties: {
             bitrix24: {
               type: "object",
-              additionalProperties: true,
               properties: {
                 mode: { type: "string", enum: ["direct", "channel"] },
                 direct: {
                   type: "object",
-                  additionalProperties: true,
                   properties: {
                     bridgeUrl: { type: "string" },
                     bridgeToken: { type: "string" },
@@ -65,7 +61,6 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
                 },
                 channel: {
                   type: "object",
-                  additionalProperties: true,
                   properties: {
                     hubUrl: { type: "string" },
                     channelToken: { type: "string" },
