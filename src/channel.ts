@@ -49,9 +49,9 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
               properties: {
                 mode: {
                   type: "string",
-                  enum: ["direct", "channel"],
+                  enum: ["direct"],
                   title: "Mode",
-                  description: "direct = app+bridge flow, channel = hub/edge flow"
+                  description: "Direct mode only"
                 },
                 direct: {
                   type: "object",
@@ -67,18 +67,6 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
                       type: "string",
                       title: "Webhook path",
                       description: "Public inbound path (example: /bitrix24/webhook)"
-                    }
-                  }
-                },
-                channel: {
-                  type: "object",
-                  title: "Channel",
-                  description: "Used in channel (hub/edge) mode",
-                  properties: {
-                    channelToken: {
-                      type: "string",
-                      title: "Token",
-                      description: "Channel transport token for hub/edge mode"
                     }
                   }
                 }
