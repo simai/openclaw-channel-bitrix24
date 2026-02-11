@@ -47,22 +47,15 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
             bitrix24: {
               type: "object",
               properties: {
-                direct: {
-                  type: "object",
-                  title: "Direct",
-                  description: "Used in direct mode",
-                  properties: {
-                    bridgeToken: {
-                      type: "string",
-                      title: "Token",
-                      description: "Direct inbound token (same value as app channel token in direct mode)"
-                    },
-                    webhookPath: {
-                      type: "string",
-                      title: "Webhook path",
-                      description: "Public inbound path (example: /bitrix24/webhook)"
-                    }
-                  }
+                bridgeToken: {
+                  type: "string",
+                  title: "Token",
+                  description: "Direct inbound token (same value as app channel token)"
+                },
+                webhookPath: {
+                  type: "string",
+                  title: "Webhook path",
+                  description: "Public inbound path (example: /bitrix24/webhook)"
                 }
               }
             }
