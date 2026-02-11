@@ -42,27 +42,39 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
       type: "object",
       additionalProperties: true,
       properties: {
-        mode: { type: "string", enum: ["direct", "channel"] },
-        direct: {
+        channels: {
           type: "object",
           additionalProperties: true,
           properties: {
-            bridgeUrl: { type: "string" },
-            bridgeToken: { type: "string" },
-            timeoutMs: { type: "number" },
-            domain: { type: "string" },
-            accessToken: { type: "string" },
-            webhookPath: { type: "string" }
-          }
-        },
-        channel: {
-          type: "object",
-          additionalProperties: true,
-          properties: {
-            hubUrl: { type: "string" },
-            channelToken: { type: "string" },
-            tenantChannelId: { type: "string" },
-            timeoutMs: { type: "number" }
+            bitrix24: {
+              type: "object",
+              additionalProperties: true,
+              properties: {
+                mode: { type: "string", enum: ["direct", "channel"] },
+                direct: {
+                  type: "object",
+                  additionalProperties: true,
+                  properties: {
+                    bridgeUrl: { type: "string" },
+                    bridgeToken: { type: "string" },
+                    timeoutMs: { type: "number" },
+                    domain: { type: "string" },
+                    accessToken: { type: "string" },
+                    webhookPath: { type: "string" }
+                  }
+                },
+                channel: {
+                  type: "object",
+                  additionalProperties: true,
+                  properties: {
+                    hubUrl: { type: "string" },
+                    channelToken: { type: "string" },
+                    tenantChannelId: { type: "string" },
+                    timeoutMs: { type: "number" }
+                  }
+                }
+              }
+            }
           }
         }
       }
