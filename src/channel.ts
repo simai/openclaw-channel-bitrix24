@@ -16,7 +16,7 @@ const bitrix24Meta = {
   selectionLabel: "Bitrix24 (app + bridge)",
   docsPath: "/channels/bitrix24",
   docsLabel: "bitrix24",
-  blurb: "Bitrix24 channel plugin with direct and hub/edge modes.",
+  blurb: "Bitrix24 direct channel.",
   order: 66,
   aliases: ["bitrix", "b24"],
 } as const;
