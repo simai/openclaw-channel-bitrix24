@@ -35,7 +35,38 @@ export const bitrix24ChannelPlugin: ChannelPlugin<Bitrix24ResolvedAccount> = {
     nativeCommands: false,
   },
   reload: {
-    configPrefixes: ["plugins.entries.bitrix24", "channels.bitrix24"],
+    configPrefixes: ["plugins.entries.bitrix24", "plugins.entries.openclaw-channel-bitrix24", "channels.bitrix24"],
+  },
+  configSchema: {
+    schema: {
+      type: "object",
+      additionalProperties: true,
+      properties: {
+        mode: { type: "string", enum: ["direct", "channel"] },
+        direct: {
+          type: "object",
+          additionalProperties: true,
+          properties: {
+            bridgeUrl: { type: "string" },
+            bridgeToken: { type: "string" },
+            timeoutMs: { type: "number" },
+            domain: { type: "string" },
+            accessToken: { type: "string" },
+            webhookPath: { type: "string" }
+          }
+        },
+        channel: {
+          type: "object",
+          additionalProperties: true,
+          properties: {
+            hubUrl: { type: "string" },
+            channelToken: { type: "string" },
+            tenantChannelId: { type: "string" },
+            timeoutMs: { type: "number" }
+          }
+        }
+      }
+    }
   },
   config: {
     listAccountIds: () => ["default"],
